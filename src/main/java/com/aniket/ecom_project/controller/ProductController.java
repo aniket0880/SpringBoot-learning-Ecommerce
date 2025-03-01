@@ -4,6 +4,7 @@ import com.aniket.ecom_project.model.Products;
 import com.aniket.ecom_project.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,5 +49,13 @@ public class ProductController {
         catch (Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping("/product/{productId}/image")
+    public ResponseEntity<byte[]> getImageByProductId(@PathVariable int productId){
+
+        Products products=service.getProduct(productId);
+        byte[] imageFile=products.getImageData();
+
+        return ResponseEntity.ok().contentType(MediaType.valueOf(products.getImageType())).body(imageFile);
     }
 }
